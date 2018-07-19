@@ -1,7 +1,4 @@
-import PageObjects.DraftMailsPage;
-import PageObjects.HomePage;
-import PageObjects.IncomingMailsPage;
-import PageObjects.NewLetterPage;
+import PageObjects.*;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -9,7 +6,9 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+
 import java.util.concurrent.TimeUnit;
+
 import static PageObjects.BaseAreasPage.MAIL_SUBJECT;
 import static org.testng.Assert.*;
 
@@ -27,8 +26,8 @@ public class MailRuTestPageObject {
 
     @AfterClass(alwaysRun = true)
     public void closeBrowser() {
-       driver.quit();
-     }
+        driver.quit();
+    }
 
     @Test(description = "mail.ru page should open and contain appropriate title")
     public void loginTest() throws InterruptedException {
@@ -65,61 +64,30 @@ public class MailRuTestPageObject {
         assertEquals(draftMailsPage.driver.getTitle(), "Новое письмо - Почта Mail.Ru");
 
         // assert that draft presents in the Draft folder
-        assertTrue(draftMailsPage.getSubjectTextsOfDraftedMails().contains(MAIL_SUBJECT), "The draft of test email is absent in the folder");
+        assertTrue(draftMailsPage.getSubjectTextsOfMails().contains(MAIL_SUBJECT), "The draft of test email is absent in the folder");
 
         //Open saved draft
-
         newLetterPage = draftMailsPage.openLastSavedDraft();
         assertEquals(newLetterPage.driver.getTitle(), "Новое письмо - Почта Mail.Ru");
 
         // assert that all field contain the same information that before saving as draft
         assertEquals(newLetterPage.getMailAddress(), "ekaterinamoldavskaia18@gmail.com");
         assertEquals(newLetterPage.getMailSubject(), MAIL_SUBJECT);
-
-   /*
-
-        assertEquals(driver.findElement(By.cssSelector("[data-text='ekaterinamoldavskaia18@gmail.com']"))
-                .getText(), "ekaterinamoldavskaia18@gmail.com");
-        JavascriptExecutor js = (JavascriptExecutor) driver;
-        Object subToMail = js.executeScript("return document.getElementsByName('Subject')[0].value");
-        assertEquals(subToMail, subjectToMail.toString());
-        driver.switchTo().frame(driver.findElement(By.cssSelector("iframe")));
-        wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("#tinymce")));
-        assertTrue(driver.findElement(By.cssSelector("#tinymce")).getText().contains("Text"), "Mail text is absent");
-        driver.switchTo().defaultContent();
+        assertTrue(newLetterPage.getBodyText().contains("Text"), "Mail text is absent");
 
         // send email
-        wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//div[@data-name='send']"))).click();
+        newLetterPage.sendMail();
 
         // assert that the draft disappeared from draft folder
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(".message-sent__title")));
-        driver.findElement(By.cssSelector("[data-mnemo='drafts']")).click();
-        wait.until(ExpectedConditions.titleIs("Черновики - Почта Mail.Ru"));
-        List<WebElement> subjectsOfMailForTestAfterSending = driver.findElements(
-                By.cssSelector(".b-datalist__item__subj"));
-        List<String> textOfSubjectsAfterSending = new ArrayList<String>();
-        for (WebElement subjectAfterSending : subjectsOfMailForTestAfterSending) {
-            String bodyOfMail2 = subjectAfterSending.findElement(By.cssSelector(".b-datalist__item__subj__snippet"))
-                    .getText();
-            textOfSubjectsAfterSending.add(subjectAfterSending.getText().replace(bodyOfMail2, "").trim());
-        }
-        assertFalse(textOfSubjectsAfterSending.contains(
-                subjectToMail.toString()), "The draft of test email is absent in the folder");
+        draftMailsPage = newLetterPage.openDraftFolder();
+        assertFalse(draftMailsPage.getSubjectTextsOfMails().contains(MAIL_SUBJECT), "The draft stays in the folder");
 
         //assert the sent mail presents in Sent folder
-        wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("[href='/messages/sent/']"))).click();
-        wait.until(ExpectedConditions.titleIs("Отправленные - Почта Mail.Ru"));
-        List<WebElement> sentMails = driver.findElements(By.cssSelector(".b-datalist__item__subj"));
-        List<String> sentSubjects = new ArrayList<String>();
-        for (WebElement sentMail : sentMails) {
-            String bodyOfMail = sentMail.findElement(By.cssSelector(".b-datalist__item__subj__snippet")).getText();
-            sentSubjects.add(sentMail.getText().replace(bodyOfMail, "").trim());
-        }
-        assertTrue(sentSubjects.contains(subjectToMail.toString()), "The sent test email is absent in the folder");
+        SentMailsPage sentMailsPage = draftMailsPage.openSentFolder();
+        assertTrue(sentMailsPage.getSubjectTextsOfMails().contains(MAIL_SUBJECT), "The sent email is absent in the folder");
 
         //Log off
-        driver.findElement(By.cssSelector("#PH_logoutLink")).click();
-        assertEquals(driver.getTitle(), "Mail.Ru: почта, поиск в интернете, новости, игры");
-    }*/
+        homepage = sentMailsPage.logOff();
+        assertEquals(homepage.driver.getTitle(), "Mail.Ru: почта, поиск в интернете, новости, игры");
     }
 }

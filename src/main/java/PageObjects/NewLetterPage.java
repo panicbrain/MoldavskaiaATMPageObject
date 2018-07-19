@@ -4,8 +4,6 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 
-import java.util.UUID;
-
 public class NewLetterPage extends BaseAreasPage {
     public NewLetterPage(WebDriver driver) {
         super(driver);
@@ -18,7 +16,8 @@ public class NewLetterPage extends BaseAreasPage {
     private final static By SAVE_AS_DRAFT_BUTTON_LOCATOR = By.cssSelector("#b-toolbar__right [data-name='saveDraft']");
     private final static By SAVE_STATUS_MESSAGE_LOCATOR = By.cssSelector("[data-mnemo=\"saveStatus\"]");
     private final static By FILLED_EMAIL_ADDRESS_LOCATOR = By.cssSelector("[data-text='ekaterinamoldavskaia18@gmail.com']");
-
+    private final static By SEND_MAIL_BUTTON = By.xpath("//div[@data-name='send']");
+    private final static By SENT_MAIL_MESSAGE = By.cssSelector(".message-sent__title");
 
     public NewLetterPage fillEmailInput(String email) {
         waitForElementsVisible(EMAIL_ADDRESS_INPUT_LOCATOR);
@@ -47,16 +46,29 @@ public class NewLetterPage extends BaseAreasPage {
         return this;
     }
 
-    public String getMailAddress(){
+    public String getMailAddress() {
         waitForElementVisible(FILLED_EMAIL_ADDRESS_LOCATOR);
         String mailAddress = driver.findElement(FILLED_EMAIL_ADDRESS_LOCATOR).getText();
         return mailAddress;
     }
 
-    public Object getMailSubject(){
+    public Object getMailSubject() {
         JavascriptExecutor js = (JavascriptExecutor) driver;
         Object subToMail = js.executeScript("return document.getElementsByName('Subject')[0].value");
         return subToMail;
     }
 
+    public String getBodyText() {
+        driver.switchTo().frame(driver.findElement(FRAME_MAIL_BODY_LOCATOR));
+        waitForElementEnabled(MAIL_BODY_INPUT_LOCATOR);
+        String bodyText = driver.findElement(MAIL_BODY_INPUT_LOCATOR).getText();
+        driver.switchTo().defaultContent();
+        return bodyText;
+    }
+
+    public void sendMail() {
+        waitForElementEnabled(SEND_MAIL_BUTTON);
+        driver.findElement(SEND_MAIL_BUTTON).click();
+        waitForElementVisible(SENT_MAIL_MESSAGE);
+    }
 }
