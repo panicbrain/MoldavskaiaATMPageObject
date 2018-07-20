@@ -3,8 +3,6 @@ package PageObjects;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +22,6 @@ public abstract class BaseAreasPage extends AbstractPage {
 
     static final UUID SUBJECT_TO_MAIL = UUID.randomUUID();
     public static final String MAIL_SUBJECT = SUBJECT_TO_MAIL.toString();
-    WebDriverWait wait = new WebDriverWait(driver, 10);
 
     public NewLetterPage createNewLetter() {
         waitForElementEnabled(NEW_LETTER_BUTTON);
@@ -51,7 +48,7 @@ public abstract class BaseAreasPage extends AbstractPage {
     }
 
     public List<String> getSubjectTextsOfMails() throws InterruptedException {
-        wait.until(ExpectedConditions.titleIs("Черновики - Почта Mail.Ru"));
+        driver.navigate().refresh();
         waitForElementPresent(MAIL_SUBJECTS_LOCATOR);
         List<WebElement> subjectsOfMailForTest = driver.findElements(MAIL_SUBJECTS_LOCATOR);
         List<String> textOfSubjects = new ArrayList<String>();
