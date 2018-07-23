@@ -21,6 +21,7 @@ public class MailRuTestPageObject {
         System.setProperty("webdriver.chrome.driver", "src/chromedriver.exe");
         driver = new ChromeDriver();
         driver.manage().timeouts().pageLoadTimeout(15, TimeUnit.SECONDS);
+        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
         driver.manage().window().maximize();
     }
 

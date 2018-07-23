@@ -8,7 +8,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
+
 
 public abstract class BaseAreasPagePf extends AbstractPagePf {
     public BaseAreasPagePf(WebDriver driver) {
@@ -34,8 +34,6 @@ public abstract class BaseAreasPagePf extends AbstractPagePf {
 
     private final static By SUBJECTS_WITH_BODY = By.cssSelector(".b-datalist__item__subj__snippet");
 
-    static final UUID SUBJECT_TO_MAIL = UUID.randomUUID();
-    public static final String MAIL_SUBJECT = SUBJECT_TO_MAIL.toString();
     WebDriverWait wait = new WebDriverWait(driver, 10);
 
     public NewLetterPagePf createNewLetter() {
@@ -47,6 +45,7 @@ public abstract class BaseAreasPagePf extends AbstractPagePf {
     public DraftMailsPagePf openDraftFolder() {
         waitForElementEnabled(draftLetterFolder);
         draftLetterFolder.click();
+        driver.navigate().refresh();
         return new DraftMailsPagePf(driver);
     }
 

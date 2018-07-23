@@ -13,6 +13,7 @@ public abstract class AbstractPagePf {
     public WebDriver driver;
     private static final int WAIT_FOR_ELEMENT_TIMEOUT_SECONDS = 10;
 
+
     public AbstractPagePf(WebDriver driver) {
         this.driver = driver;
         PageFactory.initElements(driver, this);

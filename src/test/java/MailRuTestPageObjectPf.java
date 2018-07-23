@@ -1,5 +1,4 @@
 import PageFactory.*;
-import PageObjects.*;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -8,9 +7,9 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
-import static PageObjects.BaseAreasPage.MAIL_SUBJECT;
 import static org.testng.Assert.*;
 
 public class MailRuTestPageObjectPf {
@@ -34,6 +33,8 @@ public class MailRuTestPageObjectPf {
     @Test(description = "mail.ru page should open and contain appropriate title")
     public void loginTest() throws InterruptedException {
         WebDriverWait wait = new WebDriverWait(driver, 10);
+         final UUID SUBJECT_TO_MAIL = UUID.randomUUID();
+         final String MAIL_SUBJECT = SUBJECT_TO_MAIL.toString();
 
         // Open mail.ru page
         HomePagePf homePagePf = new HomePagePf(driver);
@@ -55,7 +56,7 @@ public class MailRuTestPageObjectPf {
         //Create a new mail
         NewLetterPagePf newLetterPagePf = incomingMailsPagePf.createNewLetter();
         newLetterPagePf.fillEmailInput("ekaterinamoldavskaia18@gmail.com");
-        newLetterPagePf.fillSubjectInput();
+        newLetterPagePf.fillSubjectInput(MAIL_SUBJECT);
         newLetterPagePf.fillMailBodyInput("Text");
 
         // save the mail as draft
@@ -63,13 +64,13 @@ public class MailRuTestPageObjectPf {
 
         //open drafts folder
         DraftMailsPagePf draftMailsPagePf = newLetterPagePf.openDraftFolder();
-        assertEquals(draftMailsPagePf.driver.getTitle(), "Новое письмо - Почта Mail.Ru");
+        assertEquals(draftMailsPagePf.driver.getTitle(), "Черновики - Почта Mail.Ru");
 
         // assert that draft presents in the Draft folder
         assertTrue(draftMailsPagePf.getSubjectTextsOfMails().contains(MAIL_SUBJECT), "The draft of test email is absent in the folder");
 
         //Open saved draft
-        newLetterPagePf = draftMailsPagePf.openLastSavedDraft();
+        newLetterPagePf = draftMailsPagePf.openSavedDraft(MAIL_SUBJECT);
         assertEquals(newLetterPagePf.driver.getTitle(), "Новое письмо - Почта Mail.Ru");
 
         // assert that all field contain the same information that before saving as draft

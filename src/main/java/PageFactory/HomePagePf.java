@@ -1,12 +1,9 @@
 package PageFactory;
 
-import PageObjects.AbstractPage;
-import PageObjects.IncomingMailsPage;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.FindBys;
+
 
 public class HomePagePf extends AbstractPagePf {
     public HomePagePf(WebDriver driver) {
@@ -21,7 +18,6 @@ public class HomePagePf extends AbstractPagePf {
 
     @FindBy(css = ".o-control[type=submit]")
     private WebElement signInButton;
-
 
     public HomePagePf open() {
         driver.navigate().to("https://mail.ru/");

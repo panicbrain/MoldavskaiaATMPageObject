@@ -1,22 +1,18 @@
 package PageFactory;
 
-
-import PageObjects.NewLetterPage;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.FindBy;
+
 
 public class DraftMailsPagePf extends BaseAreasPagePf {
     public DraftMailsPagePf(WebDriver driver) {
         super(driver);
     }
 
-    private String toLocator = "[data-subject='" + MAIL_SUBJECT + "']";
-    private final By LAST_SAVED_DRAFT_LOCATOR = By.cssSelector(toLocator);
+    private final String toLocator = "[data-subject='%s']";
 
-    public NewLetterPagePf openLastSavedDraft() {
-        driver.findElement(LAST_SAVED_DRAFT_LOCATOR).click();
+    public NewLetterPagePf openSavedDraft(String MAIL_SUBJECT) {
+        driver.findElement(By.cssSelector(String.format(toLocator, MAIL_SUBJECT))).click();
         return new NewLetterPagePf(driver);
     }
 }

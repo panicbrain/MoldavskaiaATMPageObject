@@ -43,9 +43,9 @@ public class NewLetterPagePf extends BaseAreasPagePf {
         return this;
     }
 
-    public NewLetterPagePf fillSubjectInput() {
+    public NewLetterPagePf fillSubjectInput(String mailSubject) {
         waitForElementVisible(subjectInput);
-        subjectInput.sendKeys(MAIL_SUBJECT);
+        subjectInput.sendKeys(mailSubject);
         return this;
     }
 
